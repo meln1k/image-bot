@@ -1,0 +1,10 @@
+[package]
+name = "image-bot"
+version = "0.1.0"
+edition = "2021"
+authors = ["Nikita Melkozerov <n.melkozerov@gmail.com>"]
+description = "A telegram bot that shows random pictures and allows you to rate them"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
