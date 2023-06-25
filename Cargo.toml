@@ -7,4 +7,13 @@ description = "A telegram bot that shows random pictures and allows you to rate 
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[lib]
+path = "src/handler.rs"
+
 [dependencies]
+teloxide = { version = "0.12", features = ["macros"] }
+log = "0.4"
+pretty_env_logger = "0.5.0"
+tokio = { version =  "1.28", features = ["rt-multi-thread", "macros"] }
+hyper = { version = "0.14", features = ["runtime", "client", "server", "http1", "http2"] }
+
