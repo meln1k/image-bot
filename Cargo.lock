@@ -502,7 +502,7 @@ dependencies = [
 name = "image-bot"
 version = "0.1.0"
 dependencies = [
- "hyper",
+ "lazy_static",
  "log",
  "pretty_env_logger",
  "teloxide",
