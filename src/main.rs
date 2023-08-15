@@ -1,12 +1,16 @@
+mod image_repository;
+mod models;
+
 use std::error::Error;
 use teloxide::{
     prelude::*,
     types::{
         InlineKeyboardButton, InlineKeyboardMarkup, InlineQueryResultArticle, InputFile,
-        InputMessageContent, InputMessageContentText, Me,
+        InputMessageContent, InputMessageContentText, Me, MessageKind, MediaKind
     },
     utils::command::BotCommands, RequestError,
 };
+use sqlx::sqlite::SqlitePool;
 
 #[derive(BotCommands)]
 #[command(
@@ -24,6 +28,8 @@ enum Command {
 async fn main() -> Result<(), Box<dyn Error>> {
     pretty_env_logger::init();
     log::info!("Starting buttons bot...");
+
+    let pool = SqlitePool::connect("sqlite:imgbot.db").await?;
 
     let bot = Bot::from_env();
 
@@ -61,11 +67,30 @@ fn make_keyboard() -> InlineKeyboardMarkup {
 async fn send_new_picture(bot: Bot, chat_id: ChatId) -> Result<(), RequestError> {
     let cat_pic = include_bytes!("../img/cat.png").to_vec();
     let keyboard = make_keyboard();
-    bot.send_photo(chat_id, InputFile::memory(cat_pic))
+    let photo = InputFile::memory(cat_pic);
+    let result = bot.send_photo(chat_id, photo)
         .caption("Hello, I'm a bot to show you a cat picture. Please, choose a reaction:")
         .reply_markup(keyboard)
         .await?;
 
+    let file_id = match result.kind {
+        MessageKind::Common(ref msg) => {
+            match msg.media_kind {
+                MediaKind::Photo(ref media_photo) => {
+                    media_photo.photo.last().unwrap().file.id.clone()
+                },
+                _ => {
+                    panic!("Not a photo")
+                }
+            }
+        },
+        _ => {
+            panic!("Not a message")
+        }
+    };
+
+
+    println!("file_id: {:?}", file_id);
     Ok(())
 }
 
