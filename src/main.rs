@@ -44,7 +44,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
 fn make_keyboard() -> InlineKeyboardMarkup {
     let mut keyboard: Vec<Vec<InlineKeyboardButton>> = vec![];
 
-    let reactions = ["👎", "👍", "🔥", "⏭️"];
+    let reactions = ["👎", "👍", "🔥", "⏭️", "🍑", "🍆"];
 
     for versions in reactions.chunks(3) {
         let row = versions
